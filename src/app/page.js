@@ -1,33 +1,77 @@
+"use client";
+
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  CircularProgress,
+} from "@mui/material";
+import { motion } from "framer-motion";
+
 export default function Home() {
   return (
-    <main
-      className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center text-white"
-      style={{ backgroundImage: "url('/images/coming-soon-bg.jpg')" }}
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        backgroundColor: "#0a0a0a",
+        backgroundImage: "url('/images/coming-soon-bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        position: "relative",
+        color: "white",
+        overflow: "hidden",
+      }}
     >
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+      {/* Dark Overlay */}
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
+        }}
+      />
 
-      <div className="relative text-center px-6">
-        <h1 className="text-5xl md:text-6xl font-bold">
-          Terrenos en El Salvador
-        </h1>
-        <p className="text-lg md:text-xl mt-4">
-          Próximamente: Compra terrenos a buen precio
-        </p>
-
-        {/* Countdown Timer Placeholder (optional) */}
-        <div className="mt-6 text-2xl font-semibold">
-          <span>🚧 Sitio en construcción...</span>
-        </div>
-
-        {/* Notify Me Button */}
-        <a
-          href="mailto:info@terrenosenelsalvador.com"
-          className="mt-8 inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg text-lg transition"
+      {/* Content */}
+      <Container sx={{ position: "relative", zIndex: 1 }}>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
         >
-          Notificarme
-        </a>
-      </div>
-    </main>
+          <Typography variant="h2" sx={{ fontWeight: "bold", mb: 2 }}>
+            🌎 Terrenos en El Salvador
+          </Typography>
+          <Typography variant="h5" sx={{ opacity: 0.8, mb: 4 }}>
+            Estamos construyendo algo increíble para ti. ¡Muy pronto podrás
+            comprar tu terreno ideal!
+          </Typography>
+
+          {/* Animated Progress Circle */}
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            style={{ display: "inline-block" }}
+          >
+            <CircularProgress size={80} sx={{ color: "#ff5733" }} />
+          </motion.div>
+
+          {/* Notify Me Button */}
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            href="mailto:info@terrenosenelsalvador.com"
+            sx={{ mt: 4 }}
+          >
+            Notificarme 📩
+          </Button>
+        </motion.div>
+      </Container>
+    </Box>
   );
 }

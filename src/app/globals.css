@@ -1,24 +1,74 @@
-@import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+/* Global CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Improve font rendering */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Make body fill viewport */
+/* Apply background color to entire app */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #0a0a0a;
+  color: #ffffff; /* Ensure text is white */
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Remove default list styles */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Remove default button styles */
+button,
+input,
+textarea {
+  border: none;
+  outline: none;
+  font: inherit;
+}
+
+/* Make images responsive */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Remove anchor underline */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Remove default focus outlines */
+a,
+button {
+  outline: none;
+}
+
+/* Improve focus for accessibility */
+a:focus,
+button:focus {
+  outline: 2px solid #ff5733;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+button,
+a {
+  transition: all 0.3s ease-in-out;
 }
