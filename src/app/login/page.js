@@ -48,7 +48,7 @@ export default function LoginPage() {
     try {
       await signIn(email, password);
 
-      router.push("/dashboard"); // ✅ Redirect after login
+      router.push("/profile"); // ✅ Redirect after login
     } catch (err) {
       setError(getFirebaseErrorMessage(err.code));
     }

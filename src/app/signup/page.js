@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signUp } from "@/firebase/auth";
-import { useUser } from "@/context/UserContext"; // ✅ Import User Context
+import { auth } from "@/firebase/config";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useUser } from "@/context/UserContext";
 import {
   Box,
   Button,
@@ -14,7 +15,8 @@ import {
 } from "@mui/material";
 
 export default function SignupPage() {
-  const { user, loading: userLoading } = useUser(); // ✅ Get user & loading state
+  const { user, loading: userLoading } = useUser();
+  const [name, setName] = useState(""); // ✅ Added name field
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,7 +24,6 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // ✅ Show a loading screen if authentication state is still being checked
   if (userLoading) {
     return (
       <Box
@@ -36,15 +37,19 @@ export default function SignupPage() {
     );
   }
 
-  // ✅ Redirect if user is already logged in
   if (user) {
-    router.push("/dashboard"); // Change this if needed
+    router.push("/profile");
     return null;
   }
 
-  const handleSignup = async () => {
+  async function handleSignup() {
+    if (!email || !password || !confirmPassword || !name) {
+      setError("Todos los campos son obligatorios");
+      return;
+    }
+
     if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden.");
+      setError("Las contraseñas no coinciden");
       return;
     }
 
@@ -52,15 +57,38 @@ export default function SignupPage() {
     setError("");
 
     try {
-      await signUp(email, password);
-      alert("🎉 ¡Registro exitoso! Ahora puedes iniciar sesión.");
-      router.push("/profile"); // ✅ Redirect after signup
-    } catch (err) {
-      setError(err.message);
-    }
+      // ✅ Create user in Firebase
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
 
-    setLoading(false);
-  };
+      // ✅ Update user profile
+      await updateProfile(user, { displayName: name });
+
+      // ✅ Send user data to MongoDB API
+      await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          uid: user.uid,
+          email: user.email,
+          name: name,
+          photoURL: user.photoURL || "",
+        }),
+      });
+
+      console.log("Signup successful!");
+      router.push("/profile"); // ✅ Redirect to profile page after signup
+    } catch (error) {
+      console.error("Signup error:", error.message);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Container maxWidth="sm" sx={{ textAlign: "center", mt: 10 }}>
@@ -78,6 +106,19 @@ export default function SignupPage() {
       )}
 
       <Box component="form" noValidate autoComplete="off">
+        <TextField
+          label="Nombre Completo"
+          type="text"
+          variant="outlined"
+          fullWidth
+          sx={{
+            mb: 2,
+            backgroundColor: "#e0e0e0",
+            borderRadius: 1,
+          }}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <TextField
           label="Correo Electrónico"
           type="email"

@@ -46,6 +46,9 @@ export default function ProfilePage() {
       <Typography variant="body1" sx={{ mb: 3 }}>
         <strong>Email:</strong> {user.email}
       </Typography>
+      <Typography variant="body1" sx={{ mb: 3 }}>
+        <strong>Name:</strong> {user.name}
+      </Typography>
       <Button
         variant="contained"
         color="secondary"
