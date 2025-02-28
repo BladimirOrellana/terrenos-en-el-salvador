@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { AppBar, Toolbar, Button, Box, Typography } from "@mui/material";
+import { useUser } from "@/context/UserContext";
 
 export default function NavBar() {
+  const { user } = useUser();
   return (
     <AppBar position="static" sx={{ backgroundColor: "#0a0a0a" }}>
       <Toolbar>
@@ -15,17 +17,22 @@ export default function NavBar() {
         </Typography>
 
         {/* Navigation Links */}
-        <Box>
-          <Link href="/login" passHref>
-            <Button color="inherit">Iniciar Sesión</Button>
-          </Link>
-          <Link href="/signup" passHref>
-            <Button color="inherit">Registrarse</Button>
-          </Link>
-          <Link href="/profile" passHref>
-            <Button color="inherit">Profile</Button>
-          </Link>
-        </Box>
+        {user ? (
+          <Box>
+            <Link href="/profile" passHref>
+              <Button color="inherit">Profile</Button>
+            </Link>
+          </Box>
+        ) : (
+          <Box>
+            <Link href="/login" passHref>
+              <Button color="inherit">Iniciar Sesión</Button>
+            </Link>
+            <Link href="/signup" passHref>
+              <Button color="inherit">Registrarse</Button>
+            </Link>
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   );

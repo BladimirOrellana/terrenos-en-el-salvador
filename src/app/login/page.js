@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // ✅ Redirect after login
 import { signIn } from "@/firebase/auth";
+import { useUser } from "@/context/UserContext"; // ✅ Correctly import UserContext
 import {
   Box,
   Button,
@@ -13,11 +14,32 @@ import {
 } from "@mui/material";
 
 export default function LoginPage() {
+  const { user, loading: userLoading } = useUser(); // ✅ Correctly get loading state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  // ✅ Show loading indicator if authentication state is still being checked
+  if (userLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  // ✅ Redirect if already logged in
+  if (user) {
+    router.push("/profile"); // Change this if needed
+    return null;
+  }
 
   const handleLogin = async () => {
     setLoading(true);
@@ -25,8 +47,8 @@ export default function LoginPage() {
 
     try {
       await signIn(email, password);
-      alert("🎉 ¡Inicio de sesión exitoso!");
-      router.push("/dashboard"); // ✅ Redirect to dashboard (update URL as needed)
+
+      router.push("/dashboard"); // ✅ Redirect after login
     } catch (err) {
       setError(getFirebaseErrorMessage(err.code));
     }

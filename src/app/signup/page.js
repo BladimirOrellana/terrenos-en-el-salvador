@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { signUp } from "@/firebase/auth";
+import { useUser } from "@/context/UserContext"; // ✅ Import User Context
 import {
   Box,
   Button,
@@ -12,11 +14,33 @@ import {
 } from "@mui/material";
 
 export default function SignupPage() {
+  const { user, loading: userLoading } = useUser(); // ✅ Get user & loading state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  // ✅ Show a loading screen if authentication state is still being checked
+  if (userLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  // ✅ Redirect if user is already logged in
+  if (user) {
+    router.push("/dashboard"); // Change this if needed
+    return null;
+  }
 
   const handleSignup = async () => {
     if (password !== confirmPassword) {
@@ -30,9 +54,7 @@ export default function SignupPage() {
     try {
       await signUp(email, password);
       alert("🎉 ¡Registro exitoso! Ahora puedes iniciar sesión.");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
+      router.push("/profile"); // ✅ Redirect after signup
     } catch (err) {
       setError(err.message);
     }
