@@ -1,10 +1,11 @@
 "use client";
 
-import "./globals.css"; // ✅ Ensures global styles apply
+import "./globals.css"; // ✅ Global styles
 import { useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import theme from "@/theme/theme"; // ✅ Import updated theme
+import theme from "@/theme/theme"; // ✅ Import theme
+import NavBar from "@/components/NavBar"; // ✅ Import the NavBar component
 
 export default function RootLayout({ children }) {
   useEffect(() => {
@@ -22,7 +23,8 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ThemeProvider theme={theme}>
-          <CssBaseline /> {/* ✅ Applies global Material UI styles */}
+          <CssBaseline /> {/* ✅ Ensures a consistent Material UI baseline */}
+          <NavBar /> {/* ✅ Added NavBar */}
           {children}
         </ThemeProvider>
       </body>

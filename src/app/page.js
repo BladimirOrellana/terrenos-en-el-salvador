@@ -51,15 +51,6 @@ export default function Home() {
             comprar tu terreno ideal!
           </Typography>
 
-          {/* Animated Progress Circle */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            style={{ display: "inline-block" }}
-          >
-            <CircularProgress size={80} sx={{ color: "#ff5733" }} />
-          </motion.div>
-
           {/* Notify Me Button */}
           <Button
             variant="contained"
