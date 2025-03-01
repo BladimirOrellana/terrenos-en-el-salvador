@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // ✅ Redirect after login
 import { signIn } from "@/firebase/auth";
 import { useUser } from "@/context/UserContext"; // ✅ Correctly import UserContext
@@ -20,7 +20,11 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
+  useEffect(() => {
+    if (user) {
+      router.push("/profile");
+    }
+  }, [user, router]);
   // ✅ Show loading indicator if authentication state is still being checked
   if (userLoading) {
     return (
@@ -36,10 +40,6 @@ export default function LoginPage() {
   }
 
   // ✅ Redirect if already logged in
-  if (user) {
-    router.push("/profile"); // Change this if needed
-    return null;
-  }
 
   const handleLogin = async () => {
     setLoading(true);

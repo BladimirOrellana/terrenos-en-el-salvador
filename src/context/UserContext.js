@@ -14,13 +14,12 @@ export const UserProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         try {
-          // ✅ Fetch user from MongoDB using UID
           const response = await fetch(
             `/api/auth/user?uid=${firebaseUser.uid}`
           );
           if (response.ok) {
             const userData = await response.json();
-            setUser(userData); // ✅ Set MongoDB user data
+            setUser(userData);
           } else {
             console.error("User not found in database");
             setUser(null);
@@ -39,7 +38,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, loading }}>
+    <UserContext.Provider value={{ user, loading, setUser }}>
       {children}
     </UserContext.Provider>
   );

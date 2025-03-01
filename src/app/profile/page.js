@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect } from "react";
 import { useUser } from "@/context/UserContext"; // ✅ Import User Context
 import { logOut } from "@/firebase/auth";
 import { useRouter } from "next/navigation";
@@ -15,11 +15,19 @@ export default function ProfilePage() {
   const { user, loading } = useUser(); // ✅ Get user from context
   const router = useRouter();
 
+  // ✅ Redirect to login only AFTER loading completes
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading, router]);
+
   const handleLogout = async () => {
     await logOut();
     router.push("/login"); // ✅ Redirect to login after logout
   };
 
+  // ✅ Show loading spinner while checking user state
   if (loading) {
     return (
       <Box
@@ -33,8 +41,8 @@ export default function ProfilePage() {
     );
   }
 
+  // ✅ Prevent rendering when user is null
   if (!user) {
-    router.push("/login"); // ✅ Redirect to login if not authenticated
     return null;
   }
 
