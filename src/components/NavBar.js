@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
+import { usePathname } from "next/navigation"; // ✅ Import to detect current route
 import {
   AppBar,
   Toolbar,
@@ -20,6 +21,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 export default function NavBar() {
   const { user } = useUser();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname(); // ✅ Get current route
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -27,10 +29,10 @@ export default function NavBar() {
 
   // **Navigation Links for Logged-in Users**
   const userLinks = [
+    { text: "Inicio", href: "/" },
     { text: "Perfil", href: "/profile" },
     { text: "Mis Terrenos", href: "/dashboard" },
     { text: "Agregar Terreno", href: "/add-listing" },
-    { text: "Inicio", href: "/" },
     { text: "Terrenos", href: "/listings" },
     { text: "Contacto", href: "/contact" },
     { text: "Nosotros", href: "/about" },
@@ -47,6 +49,9 @@ export default function NavBar() {
 
   // ✅ **Using Ternary (`? :`) to include `commonLinks`**
   const navLinks = user ? userLinks : guestLinks;
+
+  // ✅ **Dynamic background color (transparent on home, dark on others)**
+  const navBackground = pathname === "/" ? "transparent" : "#0a0a0a";
 
   // **Mobile Drawer (Sidebar Menu)**
   const drawer = (
@@ -74,7 +79,10 @@ export default function NavBar() {
   return (
     <>
       {/* App Bar */}
-      <AppBar position="static" sx={{ backgroundColor: "#0a0a0a" }}>
+      <AppBar
+        position="fixed"
+        sx={{ backgroundColor: navBackground, boxShadow: "none" }}
+      >
         <Toolbar>
           {/* Hamburger Icon for Mobile */}
           <IconButton
