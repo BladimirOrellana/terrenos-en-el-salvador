@@ -30,18 +30,16 @@ export default function NavBar() {
   // **Navigation Links for Logged-in Users**
   const userLinks = [
     { text: "Inicio", href: "/" },
-    { text: "Perfil", href: "/profile" },
-    { text: "Mis Terrenos", href: "/dashboard" },
-    { text: "Agregar Terreno", href: "/add-listing" },
-    { text: "Terrenos", href: "/listings" },
+    { text: "Terrenos", href: "/listing" },
     { text: "Contacto", href: "/contact" },
     { text: "Nosotros", href: "/about" },
+    { text: "Perfil", href: "/profile" },
   ];
 
   // **Navigation Links for Guests**
   const guestLinks = [
     { text: "Inicio", href: "/" },
-    { text: "Terrenos", href: "/listings" },
+    { text: "Terrenos", href: "/listing" },
     { text: "Contacto", href: "/contact" },
     { text: "Nosotros", href: "/about" },
     { text: "Iniciar Sesión", href: "/login" },
@@ -112,6 +110,9 @@ export default function NavBar() {
           </Box>
         </Toolbar>
       </AppBar>
+
+      {/* Push content down so it doesn’t go under navbar */}
+      <Box sx={{ height: "64px" }} />
 
       {/* Mobile Sidebar */}
       <Drawer anchor="left" open={mobileOpen} onClose={handleDrawerToggle}>
