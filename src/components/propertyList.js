@@ -23,12 +23,10 @@ export default function PropertyList() {
       try {
         const res = await fetch("/api/properties");
 
-        // ✅ Ensure API response is OK
         if (!res.ok) {
           throw new Error(`API error: ${res.status}`);
         }
 
-        // ✅ Check if response is empty before parsing
         const text = await res.text();
         if (!text) {
           throw new Error("Empty response from server");
@@ -87,7 +85,7 @@ export default function PropertyList() {
               <CardMedia
                 component="img"
                 height="200"
-                image={property.imageUrl || "/placeholder.jpg"}
+                image={property.images?.[0] || "/placeholder.jpg"} // Supports multiple images
                 alt={property.title}
               />
 
@@ -100,14 +98,21 @@ export default function PropertyList() {
                   ${property.price.toLocaleString()} - {property.size} m²
                 </Typography>
 
-                {/* Location */}
+                {/* Location - FIXED */}
                 <Typography
                   variant="body2"
                   color="textSecondary"
                   sx={{ mb: 2 }}
                 >
-                  📍 {property.location}
+                  📍 {property.location?.department}, {property.location?.city}
                 </Typography>
+
+                {/* If Address Exists */}
+                {property.location?.address && (
+                  <Typography variant="body2" color="textSecondary">
+                    🏠 {property.location.address}
+                  </Typography>
+                )}
 
                 {/* Buttons */}
                 <Link href={`/listing/${property._id}`} passHref>

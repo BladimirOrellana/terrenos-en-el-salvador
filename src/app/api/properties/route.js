@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import Property from "@/models/Property";
+import { Property } from "@/models/Property"; // ✅ Use named import
 import { connectToDatabase } from "@/lib/mongodb";
 
 export async function POST(req) {
   try {
     await connectToDatabase();
-    const { title, description, price, size, location, imageUrl, ownerId } =
+    const { title, description, price, size, location, images, ownerId } =
       await req.json();
 
     // Validate required fields
@@ -23,20 +23,20 @@ export async function POST(req) {
       price,
       size,
       location,
-      imageUrl,
+      images: images || [], // ✅ Ensure multiple images are supported
       ownerId,
     });
 
     await newProperty.save();
 
     return NextResponse.json(
-      { message: "Property added successfully" },
+      { message: "Property added successfully", newProperty },
       { status: 201 }
     );
   } catch (error) {
     console.error("Error adding property:", error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: "Internal Server Error", error: error.message },
       { status: 500 }
     );
   }
@@ -55,7 +55,7 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching properties:", error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: "Internal Server Error", error: error.message },
       { status: 500 }
     );
   }

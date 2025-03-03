@@ -5,12 +5,12 @@ import { useParams, useRouter } from "next/navigation";
 import {
   Container,
   Typography,
-  Grid,
   Card,
   CardMedia,
   CardContent,
   CircularProgress,
   Button,
+  Box,
 } from "@mui/material";
 
 export default function PropertyPage() {
@@ -62,26 +62,50 @@ export default function PropertyPage() {
     <Container maxWidth="md" sx={{ textAlign: "center", mt: 5 }}>
       {property && (
         <>
-          <Card>
-            <CardMedia
-              component="img"
-              height="300"
-              image={property.imageUrl || "/placeholder.jpg"}
-              alt={property.title}
-            />
-            <CardContent>
-              <Typography variant="h4">{property.title}</Typography>
-              <Typography variant="h6" color="textSecondary">
-                ${property.price.toLocaleString()} - {property.size} m²
+          {/* ✅ Image Carousel / Slider */}
+          <Box sx={{ display: "flex", overflowX: "auto", gap: 2, pb: 2 }}>
+            {property.images?.length > 0 ? (
+              property.images.map((image, index) => (
+                <CardMedia
+                  key={index}
+                  component="img"
+                  height="300"
+                  image={image || "/placeholder.jpg"}
+                  alt={`Property image ${index + 1}`}
+                  sx={{ width: "100%", maxWidth: 400, borderRadius: 2 }}
+                />
+              ))
+            ) : (
+              <CardMedia
+                component="img"
+                height="300"
+                image="/placeholder.jpg"
+                alt="Placeholder Image"
+              />
+            )}
+          </Box>
+
+          <CardContent>
+            <Typography variant="h4">{property.title}</Typography>
+            <Typography variant="h6" color="textSecondary">
+              ${property.price.toLocaleString()} - {property.size} m²
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 2 }}>
+              {property.description}
+            </Typography>
+
+            {/* ✅ FIX: Extract location values properly */}
+            <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
+              📍 {property.location?.department}, {property.location?.city}
+            </Typography>
+
+            {/* Show address only if available */}
+            {property.location?.address && (
+              <Typography variant="body2" color="textSecondary">
+                🏠 {property.location.address}
               </Typography>
-              <Typography variant="body1" sx={{ mt: 2 }}>
-                {property.description}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-                📍 {property.location}
-              </Typography>
-            </CardContent>
-          </Card>
+            )}
+          </CardContent>
 
           <Button
             variant="contained"
