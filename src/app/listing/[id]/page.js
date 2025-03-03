@@ -113,7 +113,7 @@ export default function PropertyPage() {
             sx={{ mt: 3 }}
             onClick={() => router.push(`/seller/${property.ownerId}`)}
           >
-            Ver Perfil del Vendedor
+            Ver Perfil del Vendedor.
           </Button>
         </>
       )}
